@@ -8,12 +8,13 @@ export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
 
   useEffect(() => {
-    fetch("/api/advocates").then((response) => {
+    const url = searchTerm ? `/api/advocates?search=${searchTerm}` : "/api/advocates";
+    fetch(url).then((response) => {
       response.json().then((jsonResponse) => {
         setAdvocates(jsonResponse.data);
       });
     });
-  }, []);
+  }, [searchTerm]);
 
   return (
     <main style={{ margin: "24px" }}>
