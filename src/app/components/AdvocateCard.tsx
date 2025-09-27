@@ -15,9 +15,11 @@ export default function AdvocateCard({ advocate }: { advocate: Advocate }) {
         <DetailWithIcon icon="phone" detail={phoneNumber} />
       </div>
       <hr />
-      <div>
-        <h3>Specialties</h3>
-        {advocate.specialties.join(", ")}
+      <h3>Specialties</h3>
+      <div className="advocate-specialties">
+        {advocate.specialties.map((specialty, index) => (
+          <div key={index} className={specialty.length > 25 ? "long": ""}>{specialty}</div>
+        ))}
       </div>
     </div>
   );

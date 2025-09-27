@@ -1,0 +1,34 @@
+/* Card */
+
+.card {
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+  margin-bottom: var(--pico-block-spacing-vertical);
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-card-background-color);
+  box-shadow: var(--pico-card-box-shadow);
+}
+
+/* AdvocateCard */
+
+.advocate-details {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-normal);
+}
+
+/* DetailWithIcon */
+
+.detail-with-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-micro);
+
+  i, span {
+    display: inline-block;
+  }
+
+  i[class*="fa-"] {
+    color: var(--brand-color-light);
+  }
+}

@@ -4,6 +4,8 @@ import AdvocateCard from "./components/AdvocateCard";
 import { Advocate } from "./types";
 import { useEffect, useState } from "react";
 
+import "./page.css";
+
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -25,7 +27,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="container">
+    <main className="container" id="advocate-search">
       <header>
         <h1 className="centered">Find your advocate</h1>
       </header>
