@@ -1,1 +1,28 @@
 @import "@picocss/pico/css/pico.min.css";
+@import "./variables.css";
+@import "./typography.css";
+@import "./utils.css";
+@import "./components.css";
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--pico-primary-background);
+  padding-block: var(--spacing-normal);
+
+  section {
+    margin-bottom: 0;
+  }
+
+  svg {
+    width: 6rem;
+    path {
+      fill: var(--pico-background-color);
+    }
+  }
+}
+
+main {
+  padding: var(--spacing-normal)
+}
