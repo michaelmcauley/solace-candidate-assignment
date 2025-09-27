@@ -8,22 +8,12 @@ export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
 
   useEffect(() => {
-    console.log("fetching advocates...");
     fetch("/api/advocates").then((response) => {
       response.json().then((jsonResponse) => {
         setAdvocates(jsonResponse.data);
       });
     });
   }, []);
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    console.log("filtering advocates...");
-  };
-
-  const onClick = () => {
-    console.log(advocates);
-  };
 
   return (
     <main style={{ margin: "24px" }}>
@@ -32,8 +22,7 @@ export default function Home() {
       <br />
       <div>
         <p>Search</p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+        <input style={{ border: "1px solid black" }} onChange={e => setSearchTerm(e.target.value)} />
       </div>
       <br />
       <br />
