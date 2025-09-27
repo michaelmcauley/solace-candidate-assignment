@@ -8,14 +8,21 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
 
-  useEffect(() => {
+  // handleSearch is called when the form is submitted or when the component mounts
+  const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     const url = searchTerm ? `/api/advocates?search=${searchTerm}` : "/api/advocates";
     fetch(url).then((response) => {
       response.json().then((jsonResponse) => {
         setAdvocates(jsonResponse.data);
       });
     });
-  }, [searchTerm]);
+  };
+
+  // populate some advocates when the component mounts
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
   return (
     <main className="container">
@@ -23,7 +30,7 @@ export default function Home() {
         <h1 className="centered">Find your advocate</h1>
       </header>
       <section>
-        <form onSubmit={e => e.preventDefault()}>
+        <form onSubmit={handleSearch}>
           <fieldset role="group">
             <input
               value={searchTerm}
