@@ -1,5 +1,6 @@
 "use client";
 
+import AdvocateCard from "./components/AdvocateCard";
 import { Advocate } from "./types";
 import { useEffect, useState } from "react";
 
@@ -17,48 +18,29 @@ export default function Home() {
   }, [searchTerm]);
 
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <div>
-        <p>Search</p>
-        <input style={{ border: "1px solid black" }} onChange={e => setSearchTerm(e.target.value)} />
-      </div>
-      <br />
-      <br />
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-        {advocates.map((advocate) => {
-            return (
-              <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s, sIndex) => (
-                    <div key={sIndex}>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <main className="container">
+      <header>
+        <h1 className="centered">Find your advocate</h1>
+      </header>
+      <section>
+        <form onSubmit={e => e.preventDefault()}>
+          <fieldset role="group">
+            <input
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              name="searchTerm"
+              type="text"
+              placeholder="Search advocates by name or specialty"
+            />
+            <input type="submit" value="Search" />
+          </fieldset>
+        </form>
+      </section>
+      <section>
+        {advocates.map((advocate) => (
+          <AdvocateCard key={advocate.id} advocate={advocate} />
+        ))}
+      </section>
     </main>
   );
 }
