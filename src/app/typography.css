@@ -1,0 +1,14 @@
+/* Font copied from Solace website */
+/* Using in good faith as this is throwaway project & Solace presumably has a commercial license */
+@font-face {
+  font-family: 'Mollie Glaston';
+  src: url('/mollie-glaston.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1, h2, h3 {
+  font-family: 'Mollie Glaston', serif;
+  font-weight: 400;
+}
