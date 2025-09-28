@@ -18,7 +18,7 @@ export default function AdvocateCard({ advocate }: { advocate: Advocate }) {
       <h3>Specialties</h3>
       <div className="advocate-specialties">
         {advocate.specialties.map((specialty, index) => (
-          <div key={index} className={specialty.length > 25 ? "long": ""}>{specialty}</div>
+          <div key={index}>{specialty}</div>
         ))}
       </div>
     </div>

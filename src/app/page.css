@@ -15,10 +15,6 @@
       border-radius: var(--pico-border-radius);
       padding: var(--spacing-small);
       align-content: center;
-
-      &.long {
-        grid-row: span 2;
-      }
     }
   }
 }
