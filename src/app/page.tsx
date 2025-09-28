@@ -2,7 +2,8 @@
 
 import AdvocateCard from "./components/AdvocateCard";
 import { Advocate } from "./types";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import "./page.css";
 
@@ -10,21 +11,30 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
 
-  // handleSearch is called when the form is submitted or when the component mounts
+  // Use react-query to fetch advocates
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["advocates", searchTerm],
+    queryFn: async () => {
+      const url = searchTerm ? `/api/advocates?search=${searchTerm}` : "/api/advocates";
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch advocates");
+      }
+      return response.json();
+    },
+  });
+
+  // Update advocates state when data changes
+  useEffect(() => {
+    if (data && data.data) {
+      setAdvocates(data.data);
+    }
+  }, [data]);
+
   const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-    const url = searchTerm ? `/api/advocates?search=${searchTerm}` : "/api/advocates";
-    fetch(url).then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-      });
-    });
+    refetch();
   };
-
-  // populate some advocates when the component mounts
-  useEffect(() => {
-    handleSearch();
-  }, []);
 
   return (
     <main className="container" id="advocate-search">
@@ -46,9 +56,30 @@ export default function Home() {
         </form>
       </section>
       <section>
-        {advocates.map((advocate) => (
-          <AdvocateCard key={advocate.id} advocate={advocate} />
-        ))}
+        {isLoading && (
+          <p className="centered" aria-busy="true">Searching for advocates...</p>
+        )}
+        
+        {error && (
+          <div className="centered">
+            <p>Error loading advocates: {(error as Error).message}</p>
+            <button onClick={() => refetch()}>
+              Try Again
+            </button>
+          </div>
+        )}
+        
+        {!isLoading && !error && advocates.length === 0 && (
+          <p className="centered">No advocates found matching your search.</p>
+        )}
+        
+        {!isLoading && !error && advocates.length > 0 && (
+          <>
+            {advocates.map((advocate: Advocate) => (
+              <AdvocateCard key={advocate.id} advocate={advocate} />
+            ))}
+          </>
+        )}
       </section>
     </main>
   );
