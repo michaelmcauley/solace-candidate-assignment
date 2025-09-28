@@ -47,6 +47,8 @@ export async function GET(request: Request) {
   
   const [{ count }] = await countQuery;
   const totalPages = Math.ceil(count / limit);
+
+  await new Promise(resolve => setTimeout(resolve, 500));
   
   return Response.json({
     data,
