@@ -1,0 +1,16 @@
+:root {
+  --brand-color: #265b4e; /* from solace.health */
+  --brand-color-light: #7ec9b6; /* lighter shade via coolors.co */
+  --spacing-normal: 1rem;
+  --spacing-small: 0.5rem;
+  --spacing-tiny: 0.25rem;
+  --spacing-micro: 0.125rem;
+}
+
+/* Light color scheme (Default) */
+/* Can be forced with data-theme="light" */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --pico-primary-background: var(--brand-color);
+  --pico-primary-hover-background: var(--brand-color);
+}

@@ -1,64 +1,86 @@
 "use client";
 
+import AdvocateCard from "./components/AdvocateCard";
 import { Advocate } from "./types";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import "./page.css";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
 
+  // Use react-query to fetch advocates
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["advocates", searchTerm],
+    queryFn: async () => {
+      const url = searchTerm ? `/api/advocates?search=${searchTerm}` : "/api/advocates";
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch advocates");
+      }
+      return response.json();
+    },
+  });
+
+  // Update advocates state when data changes
   useEffect(() => {
-    const url = searchTerm ? `/api/advocates?search=${searchTerm}` : "/api/advocates";
-    fetch(url).then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-      });
-    });
-  }, [searchTerm]);
+    if (data && data.data) {
+      setAdvocates(data.data);
+    }
+  }, [data]);
+
+  const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
+    refetch();
+  };
 
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <div>
-        <p>Search</p>
-        <input style={{ border: "1px solid black" }} onChange={e => setSearchTerm(e.target.value)} />
-      </div>
-      <br />
-      <br />
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-        {advocates.map((advocate) => {
-            return (
-              <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s, sIndex) => (
-                    <div key={sIndex}>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <main className="container" id="advocate-search">
+      <header>
+        <h1 className="centered">Find your advocate</h1>
+      </header>
+      <section>
+        <form onSubmit={handleSearch}>
+          <fieldset role="group">
+            <input
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              name="searchTerm"
+              type="text"
+              placeholder="Search advocates by name or specialty"
+            />
+            <input type="submit" value="Search" />
+          </fieldset>
+        </form>
+      </section>
+      <section>
+        {isLoading && (
+          <p className="centered" aria-busy="true">Searching for advocates...</p>
+        )}
+        
+        {error && (
+          <div className="centered">
+            <p>Error loading advocates: {(error as Error).message}</p>
+            <button onClick={() => refetch()}>
+              Try Again
+            </button>
+          </div>
+        )}
+        
+        {!isLoading && !error && advocates.length === 0 && (
+          <p className="centered">No advocates found matching your search.</p>
+        )}
+        
+        {!isLoading && !error && advocates.length > 0 && (
+          <>
+            {advocates.map((advocate: Advocate) => (
+              <AdvocateCard key={advocate.id} advocate={advocate} />
+            ))}
+          </>
+        )}
+      </section>
     </main>
   );
 }
